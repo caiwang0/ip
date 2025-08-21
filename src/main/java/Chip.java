@@ -4,7 +4,7 @@ public class Chip { // <-- Remember to rename the file to Chip.java!
         String horizontalLine = "____________________________________________________________";
 
         System.out.println(horizontalLine);
-        System.out.println(" Hello! I'm Chip"); // <-- IMPORTANT: Change "Chip" to your bot's name
+        System.out.println(" Hello! I'm Chip");git add .
         System.out.println(" What can I do for you?");
         System.out.println(horizontalLine);
 
