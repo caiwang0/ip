@@ -20,7 +20,6 @@ public class Chip {
                 Command action = Command.valueOf(parts[0].toUpperCase());
                 System.out.println(horizontalLine);
 
-                // Replace your switch statement with this corrected version
                 switch (action) {
                     case BYE:
                         System.out.println(" Bye. Hope to see you again soon!");
@@ -36,7 +35,6 @@ public class Chip {
                         if (parts.length < 2) {
                             throw new ChipException("OOPS!!! Please specify which task to mark.");
                         }
-                        // Use a unique variable name
                         int taskNumberToMark = Integer.parseInt(parts[1]);
                         Task taskToMark = tasks.get(taskNumberToMark - 1);
                         taskToMark.markAsDone();
@@ -47,7 +45,6 @@ public class Chip {
                         if (parts.length < 2) {
                             throw new ChipException("OOPS!!! Please specify which task to unmark.");
                         }
-                        // Use a unique variable name
                         int taskNumberToUnmark = Integer.parseInt(parts[1]);
                         Task taskToUnmark = tasks.get(taskNumberToUnmark - 1);
                         taskToUnmark.markAsNotDone();
@@ -58,7 +55,6 @@ public class Chip {
                         if (parts.length < 2) {
                             throw new ChipException("Please specify which task to delete.");
                         }
-                        // Use a unique variable name
                         int taskNumberToDelete = Integer.parseInt(parts[1]);
                         Task removedTask = tasks.remove(taskNumberToDelete - 1);
                         System.out.println(" Noted. I've removed this task:");
@@ -69,7 +65,6 @@ public class Chip {
                         if (parts.length < 2) {
                             throw new ChipException("The description of a todo cannot be empty.");
                         }
-                        // Use a unique variable name
                         Task newTodo = new Todo(parts[1]);
                         tasks.add(newTodo);
                         System.out.println(" Got it. I've added this task:");
@@ -84,7 +79,6 @@ public class Chip {
                         if (deadlineParts.length < 2) {
                             throw new ChipException("Please specify the deadline time using /by.");
                         }
-                        // Use a unique variable name
                         Task newDeadline = new Deadline(deadlineParts[0], deadlineParts[1]);
                         tasks.add(newDeadline);
                         System.out.println(" Got it. I've added this task:");
@@ -103,7 +97,6 @@ public class Chip {
                         if (timeParts.length < 2) {
                             throw new ChipException("Please specify the event end time using /to.");
                         }
-                        // Use a unique variable name
                         Task newEvent = new Event(eventParts[0], timeParts[0], timeParts[1]);
                         tasks.add(newEvent);
                         System.out.println(" Got it. I've added this task:");
