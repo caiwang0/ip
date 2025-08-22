@@ -25,9 +25,9 @@ public class Chip {
             if (action.equals("bye")) {
                 break;
             } else if (action.equals("list")) {
-                System.out.println(horizontalLine);
+                System.out.println(" Here are the tasks in your list:");
                 for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println(" " + (i + 1) + ". " + tasks.get(i));
+                    System.out.println(" " + (i + 1) + "." + tasks.get(i));
                 }
                 System.out.println(horizontalLine);
             } else if (action.equals("mark")) {
