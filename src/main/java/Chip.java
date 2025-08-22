@@ -1,10 +1,10 @@
-public class Chip { // <-- Remember to rename the file to Chip.java!
+public class Chip {
 
     public static void main(String[] args) {
         String horizontalLine = "____________________________________________________________";
 
         System.out.println(horizontalLine);
-        System.out.println(" Hello! I'm Chip");git add .
+        System.out.println(" Hello! I'm Chip");
         System.out.println(" What can I do for you?");
         System.out.println(horizontalLine);
 
