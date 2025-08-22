@@ -9,7 +9,6 @@ public class Chip {
         System.out.println(horizontalLine);
         System.out.println(" Hello! I'm Chip");
         System.out.println(" What can I do for you?");
-        System.out.println(horizontalLine);
 
         ArrayList<Task> tasks = new ArrayList<>();
 
@@ -29,7 +28,6 @@ public class Chip {
                 for (int i = 0; i < tasks.size(); i++) {
                     System.out.println(" " + (i + 1) + "." + tasks.get(i));
                 }
-                System.out.println(horizontalLine);
             } else if (action.equals("mark")) {
                 int taskNumber = Integer.parseInt(parts[1]);
                 Task task = tasks.get(taskNumber - 1);
@@ -58,9 +56,7 @@ public class Chip {
                 System.out.println("   " + newTask);
                 System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
             }
-            System.out.println(horizontalLine);
         }
-        System.out.println(horizontalLine);
         System.out.println(" Bye. Hope to see you again soon!");
         System.out.println(horizontalLine);
     }
