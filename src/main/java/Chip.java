@@ -48,6 +48,15 @@ public class Chip {
                     task.markAsNotDone();
                     System.out.println(" OK, I've marked this task as not done yet:");
                     System.out.println("   " + task);
+                } else if (action.equals("delete")) {
+                    if (parts.length < 2) {
+                        throw new ChipException("Please specify which task to delete.");
+                    }
+                    int taskNumber = Integer.parseInt(parts[1]);
+                    Task removedTask = tasks.remove(taskNumber - 1);
+                    System.out.println(" Noted. I've removed this task:");
+                    System.out.println("   " + removedTask);
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 } else if (action.equals("todo")) {
                     if (parts.length < 2) {
                         throw new ChipException("The description of a todo cannot be empty.");
