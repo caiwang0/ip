@@ -17,90 +17,104 @@ public class Chip {
             String command = in.nextLine();
             try {
                 String[] parts = command.split(" ", 2);
-                String action = parts[0];
-
+                Command action = Command.valueOf(parts[0].toUpperCase());
                 System.out.println(horizontalLine);
 
-                if (action.equals("bye")) {
-                    System.out.println(" Bye. Hope to see you again soon!");
-                    System.out.println(horizontalLine);
-                    break;
-                } else if (action.equals("list")) {
-                    System.out.println(" Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println(" " + (i + 1) + "." + tasks.get(i));
-                    }
-                } else if (action.equals("mark")) {
-                    if (parts.length < 2) {
-                        throw new ChipException("OOPS!!! Please specify which task to mark.");
-                    }
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    Task task = tasks.get(taskNumber - 1);
-                    task.markAsDone();
-                    System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("   " + task);
-                } else if (action.equals("unmark")) {
-                    if (parts.length < 2) {
-                        throw new ChipException("OOPS!!! Please specify which task to unmark.");
-                    }
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    Task task = tasks.get(taskNumber - 1);
-                    task.markAsNotDone();
-                    System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   " + task);
-                } else if (action.equals("delete")) {
-                    if (parts.length < 2) {
-                        throw new ChipException("Please specify which task to delete.");
-                    }
-                    int taskNumber = Integer.parseInt(parts[1]);
-                    Task removedTask = tasks.remove(taskNumber - 1);
-                    System.out.println(" Noted. I've removed this task:");
-                    System.out.println("   " + removedTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                } else if (action.equals("todo")) {
-                    if (parts.length < 2) {
-                        throw new ChipException("The description of a todo cannot be empty.");
-                    }
-                    Task newTask = new Todo(parts[1]);
-                    tasks.add(newTask);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + newTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                } else if (action.equals("deadline")) {
-                    if (parts.length < 2) {
-                        throw new ChipException("The description of a deadline cannot be empty.");
-                    }
-                    String[] deadlineParts = parts[1].split(" /by ");
-                    if (deadlineParts.length < 2) {
-                        throw new ChipException("Please specify the deadline time using /by.");
-                    }
-                    Task newTask = new Deadline(deadlineParts[0], deadlineParts[1]);
-                    tasks.add(newTask);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + newTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                } else if (action.equals("event")) {
-                    if (parts.length < 2) {
-                        throw new ChipException("The description of an event cannot be empty.");
-                    }
-                    String[] eventParts = parts[1].split(" /from ");
-                    if (eventParts.length < 2) {
-                        throw new ChipException("Please specify the event start time using /from.");
-                    }
-                    String[] timeParts = eventParts[1].split(" /to ");
-                    if (timeParts.length < 2) {
-                        throw new ChipException("Please specify the event end time using /to.");
-                    }
-                    Task newTask = new Event(eventParts[0], timeParts[0], timeParts[1]);
-                    tasks.add(newTask);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + newTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                } else {
-                    throw new ChipException("I'm sorry, there is no such action.");
+                // Replace your switch statement with this corrected version
+                switch (action) {
+                    case BYE:
+                        System.out.println(" Bye. Hope to see you again soon!");
+                        System.out.println(horizontalLine);
+                        return;
+                    case LIST:
+                        System.out.println(" Here are the tasks in your list:");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println(" " + (i + 1) + "." + tasks.get(i));
+                        }
+                        break;
+                    case MARK:
+                        if (parts.length < 2) {
+                            throw new ChipException("OOPS!!! Please specify which task to mark.");
+                        }
+                        // Use a unique variable name
+                        int taskNumberToMark = Integer.parseInt(parts[1]);
+                        Task taskToMark = tasks.get(taskNumberToMark - 1);
+                        taskToMark.markAsDone();
+                        System.out.println(" Nice! I've marked this task as done:");
+                        System.out.println("   " + taskToMark);
+                        break;
+                    case UNMARK:
+                        if (parts.length < 2) {
+                            throw new ChipException("OOPS!!! Please specify which task to unmark.");
+                        }
+                        // Use a unique variable name
+                        int taskNumberToUnmark = Integer.parseInt(parts[1]);
+                        Task taskToUnmark = tasks.get(taskNumberToUnmark - 1);
+                        taskToUnmark.markAsNotDone();
+                        System.out.println(" OK, I've marked this task as not done yet:");
+                        System.out.println("   " + taskToUnmark);
+                        break;
+                    case DELETE:
+                        if (parts.length < 2) {
+                            throw new ChipException("Please specify which task to delete.");
+                        }
+                        // Use a unique variable name
+                        int taskNumberToDelete = Integer.parseInt(parts[1]);
+                        Task removedTask = tasks.remove(taskNumberToDelete - 1);
+                        System.out.println(" Noted. I've removed this task:");
+                        System.out.println("   " + removedTask);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
+                    case TODO:
+                        if (parts.length < 2) {
+                            throw new ChipException("The description of a todo cannot be empty.");
+                        }
+                        // Use a unique variable name
+                        Task newTodo = new Todo(parts[1]);
+                        tasks.add(newTodo);
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + newTodo);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
+                    case DEADLINE:
+                        if (parts.length < 2) {
+                            throw new ChipException("The description of a deadline cannot be empty.");
+                        }
+                        String[] deadlineParts = parts[1].split(" /by ");
+                        if (deadlineParts.length < 2) {
+                            throw new ChipException("Please specify the deadline time using /by.");
+                        }
+                        // Use a unique variable name
+                        Task newDeadline = new Deadline(deadlineParts[0], deadlineParts[1]);
+                        tasks.add(newDeadline);
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + newDeadline);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
+                    case EVENT:
+                        if (parts.length < 2) {
+                            throw new ChipException("The description of an event cannot be empty.");
+                        }
+                        String[] eventParts = parts[1].split(" /from ");
+                        if (eventParts.length < 2) {
+                            throw new ChipException("Please specify the event start time using /from.");
+                        }
+                        String[] timeParts = eventParts[1].split(" /to ");
+                        if (timeParts.length < 2) {
+                            throw new ChipException("Please specify the event end time using /to.");
+                        }
+                        // Use a unique variable name
+                        Task newEvent = new Event(eventParts[0], timeParts[0], timeParts[1]);
+                        tasks.add(newEvent);
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + newEvent);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
                 }
             } catch (ChipException e) {
                 System.out.println(e.getMessage());
+            }  catch (IllegalArgumentException e) {
+                System.out.println("I'm sorry, there is no such action.");
             } catch (Exception e) {
                 System.out.println("An unexpected error occurred. Please check your command.");
             } finally {
