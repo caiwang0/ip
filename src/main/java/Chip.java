@@ -1,7 +1,74 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Chip {
+
+    private static final String FILE_PATH = "./data/chip.txt";
+    private static final String DIRECTORY_PATH = "./data";
+
+    public static ArrayList<Task> loadTasksFromFile() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File(FILE_PATH);
+
+        try {
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(" \\| ");
+                Task task = null;
+
+                // Create task based on type
+                switch (parts[0]) {
+                    case "T":
+                        task = new Todo(parts[2]);
+                        break;
+                    case "D":
+                        task = new Deadline(parts[2], parts[3]);
+                        break;
+                    case "E":
+                        task = new Event(parts[2], parts[3], parts[4]);
+                        break;
+                }
+
+                if (task != null) {
+                    // Mark as done if necessary
+                    if (parts[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    tasks.add(task);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            // It's okay if the file doesn't exist, we'll start with an empty list.
+            System.out.println("Data file not found. Starting with an empty task list.");
+        } catch (Exception e) {
+            // This handles corrupted lines or other parsing errors
+            System.out.println("Error loading tasks from file. The file might be corrupted.");
+        }
+        return tasks;
+    }
+
+    public static void saveTasksToFile(ArrayList<Task> tasks) {
+        try {
+            // Ensure directory exists
+            File directory = new File(DIRECTORY_PATH);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            FileWriter writer = new FileWriter(FILE_PATH);
+            for (Task task : tasks) {
+                writer.write(task.toFileString() + System.lineSeparator());
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving tasks: " + e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         String horizontalLine = "____________________________________________________________";
@@ -10,7 +77,7 @@ public class Chip {
         System.out.println(" Hello! I'm Chip");
         System.out.println(" What can I do for you?");
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = loadTasksFromFile();
 
         Scanner in = new Scanner(System.in);
         while (true) {
@@ -60,6 +127,7 @@ public class Chip {
                         System.out.println(" Noted. I've removed this task:");
                         System.out.println("   " + removedTask);
                         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        saveTasksToFile(tasks);
                         break;
                     case TODO:
                         if (parts.length < 2) {
