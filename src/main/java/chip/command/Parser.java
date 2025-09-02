@@ -1,5 +1,7 @@
 package chip.command;
 
+import java.util.ArrayList;
+
 import chip.ChipException;
 import chip.storage.Storage;
 import chip.task.Deadline;
@@ -49,6 +51,9 @@ public class Parser {
             break;
         case EVENT:
             addEvent(parts, tasks, ui, storage);
+            break;
+        case FIND:
+            findTasks(parts, tasks, ui);
             break;
         }
     }
@@ -202,5 +207,31 @@ public class Parser {
         ui.showMessage("   " + newEvent);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
         storage.save(tasks.getTasks());
+    }
+
+    /**
+     * Finds and displays tasks that contain the specified keyword.
+     *
+     * @param parts command parts where parts[1] should contain the search keyword
+     * @param tasks the task list to search in
+     * @param ui the user interface for showing messages
+     * @throws ChipException if no keyword is provided
+     */
+    private static void findTasks(String[] parts, TaskList tasks, Ui ui) throws ChipException {
+        if (parts.length < 2) {
+            throw new ChipException("Please specify a keyword to search for.");
+        }
+
+        String keyword = parts[1];
+        ArrayList<Task> matchingTasks = tasks.findTasks(keyword);
+
+        if (matchingTasks.isEmpty()) {
+            ui.showMessage("No matching tasks found.");
+        } else {
+            ui.showMessage("Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                ui.showMessage(" " + (i + 1) + "." + matchingTasks.get(i));
+            }
+        }
     }
 }

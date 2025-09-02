@@ -19,6 +19,8 @@ public enum Command {
     UNMARK,
     /** Remove a task from the list */
     DELETE,
+    /** Find tasks containing a keyword */
+    FIND,
     /** Exit the application */
     BYE
 }

@@ -1,6 +1,5 @@
 package chip.task;
 
-import chip.ChipException;
 import java.util.ArrayList;
 
 /**
@@ -73,5 +72,21 @@ public class TaskList {
      */
     public ArrayList<Task> getTasks() {
         return this.tasks;
+    }
+
+    /**
+     * Finds tasks that contain the specified keyword in their description.
+     *
+     * @param keyword the keyword to search for in task descriptions
+     * @return ArrayList of tasks that contain the keyword (case-insensitive)
+     */
+    public ArrayList<Task> findTasks(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.toString().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
     }
 }
