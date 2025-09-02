@@ -9,13 +9,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles loading and saving of tasks to and from a file.
+ * Manages file I/O operations and data persistence for the task management system.
+ */
 public class Storage {
     private final String filePath;
 
+    /**
+     * Constructs a Storage instance with the specified file path.
+     *
+     * @param filePath the path to the file for storing task data
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the storage file.
+     * Parses the file format and creates appropriate Task objects.
+     *
+     * @return ArrayList of tasks loaded from the file, empty list if file doesn't exist
+     * @throws ChipException if file is corrupted or cannot be read
+     */
     public ArrayList<Task> load() throws ChipException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -56,6 +72,13 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the list of tasks to the storage file.
+     * Creates the directory if it doesn't exist and writes tasks in the proper format.
+     *
+     * @param tasks the list of tasks to save
+     * @throws ChipException if an I/O error occurs during saving
+     */
     public void save(ArrayList<Task> tasks) throws ChipException {
         try {
             File file = new File(filePath);

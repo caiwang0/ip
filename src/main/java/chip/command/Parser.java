@@ -1,12 +1,26 @@
 package chip.command;
 
+import chip.Chip;
 import chip.task.*;
 import chip.ui.*;
 import chip.storage.*;
 import chip.ChipException;
 
+/**
+ * Handles parsing and execution of user commands.
+ * Converts user input strings into appropriate actions on tasks, UI, and storage.
+ */
 public class Parser {
 
+    /**
+     * Parses a user command and executes the corresponding action.
+     *
+     * @param fullCommand the complete command string entered by the user
+     * @param tasks the task list to operate on
+     * @param ui the user interface for displaying messages
+     * @param storage the storage component for saving tasks
+     * @throws ChipException if the command is invalid or cannot be executed
+     */
     public static void parse(String fullCommand, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         String[] parts = fullCommand.split(" ", 2);
         Command action = Command.valueOf(parts[0].toUpperCase());
@@ -36,6 +50,12 @@ public class Parser {
         }
     }
 
+    /**
+     * Displays all tasks in the task list with their index numbers.
+     *
+     * @param tasks the task list to display
+     * @param ui the user interface for showing messages
+     */
     private static void showTaskList(TaskList tasks, Ui ui) {
         ui.showMessage("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
@@ -43,6 +63,15 @@ public class Parser {
         }
     }
 
+    /**
+     * Marks a specified task as completed.
+     *
+     * @param parts command parts where parts[1] should contain the task number
+     * @param tasks the task list containing the task to mark
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving changes
+     * @throws ChipException if task number is not specified or invalid
+     */
     private static void markTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to mark.");
@@ -55,6 +84,15 @@ public class Parser {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Marks a specified task as not completed.
+     *
+     * @param parts command parts where parts[1] should contain the task number
+     * @param tasks the task list containing the task to unmark
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving changes
+     * @throws ChipException if task number is not specified or invalid
+     */
     private static void unmarkTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to unmark.");
@@ -67,6 +105,15 @@ public class Parser {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Deletes a specified task from the task list.
+     *
+     * @param parts command parts where parts[1] should contain the task number
+     * @param tasks the task list to delete from
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving changes
+     * @throws ChipException if task number is not specified or invalid
+     */
     private static void deleteTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to delete.");
@@ -79,6 +126,15 @@ public class Parser {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Adds a new todo task to the task list.
+     *
+     * @param parts command parts where parts[1] should contain the task description
+     * @param tasks the task list to add to
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving changes
+     * @throws ChipException if task description is empty
+     */
     private static void addTodo(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("The description of a todo cannot be empty.");
@@ -91,6 +147,15 @@ public class Parser {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Adds a new deadline task to the task list.
+     *
+     * @param parts command parts containing description and deadline in format "description /by deadline"
+     * @param tasks the task list to add to
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving changes
+     * @throws ChipException if description is empty or deadline format is invalid
+     */
     private static void addDeadline(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("The description of a deadline cannot be empty.");
@@ -107,6 +172,15 @@ public class Parser {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Adds a new event task to the task list.
+     *
+     * @param parts command parts containing description and times in format "description /from start /to end"
+     * @param tasks the task list to add to
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving changes
+     * @throws ChipException if description is empty or time format is invalid
+     */
     private static void addEvent(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("The description of an event cannot be empty.");
@@ -127,6 +201,12 @@ public class Parser {
         storage.save(tasks.getTasks());
     }
 
+    /**
+     * Entry point for the Chip application.
+     * Creates a new Chip instance and starts the application.
+     *
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         new Chip("./data/chip.txt").run();
     }
