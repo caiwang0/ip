@@ -1,5 +1,6 @@
 package chip.command;
 
+import chip.Chip;
 import chip.task.*;
 import chip.ui.*;
 import chip.storage.*;
