@@ -1,11 +1,9 @@
 package chip;
 
-import java.util.Scanner;
-import java.util.ArrayList;
-import chip.command.*;
-import chip.task.*;
-import chip.storage.*;
-import chip.ui.*;
+import chip.command.Parser;
+import chip.storage.Storage;
+import chip.task.TaskList;
+import chip.ui.Ui;
 
 /**
  * Main class for the Chip task management application.
@@ -46,14 +44,12 @@ public class Chip {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
 
-                // Check for bye command separately since it doesn't modify tasks
                 if (fullCommand.trim().equalsIgnoreCase("bye")) {
                     ui.showGoodbye();
                     ui.showLine();
                     break;
                 }
 
-                // Parse and execute command using Parser
                 Parser.parse(fullCommand, tasks, ui, storage);
 
             } catch (ChipException e) {
@@ -77,4 +73,3 @@ public class Chip {
     public static void main(String[] args) {
         new Chip("./data/chip.txt").run();
     }
-}
