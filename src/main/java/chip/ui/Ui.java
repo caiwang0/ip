@@ -1,3 +1,5 @@
+package chip.ui;
+
 import java.util.Scanner;
 
 public class Ui {

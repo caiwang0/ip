@@ -1,3 +1,7 @@
+package chip.storage;
+
+import chip.task.*;
+import chip.ChipException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;

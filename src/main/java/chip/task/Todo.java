@@ -1,3 +1,7 @@
+package chip.task;
+
+import chip.ChipException;
+
 public class Todo extends Task {
 
     public Todo(String description) {

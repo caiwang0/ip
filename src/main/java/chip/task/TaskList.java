@@ -1,3 +1,7 @@
+package chip.task;
+
+import chip.ChipException;
+
 import java.util.ArrayList;
 
 public class TaskList {

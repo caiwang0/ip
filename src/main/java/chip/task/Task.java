@@ -1,3 +1,7 @@
+package chip.task;
+
+import chip.ChipException;
+
 public class Task {
     private String description;
     private boolean isDone;

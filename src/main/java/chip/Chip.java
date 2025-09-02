@@ -1,42 +1,96 @@
-public class Parser {
+package chip;
 
-    public static void parse(String fullCommand, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+import java.util.Scanner;
+import java.util.ArrayList;
+import chip.command.*;
+import chip.task.*;
+import chip.storage.*;
+import chip.ui.*;
+
+public class Chip {
+
+    private Storage storage;
+    private TaskList tasks;
+    private Ui ui;
+
+    public Chip(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        try {
+            tasks = new TaskList(storage.load());
+        } catch (ChipException e) {
+            ui.showError("Data file not found. Starting with an empty task list.");
+            tasks = new TaskList();
+        }
+    }
+
+    public void run() {
+        ui.showWelcome();
+
+        while (true) {
+            try {
+                String fullCommand = ui.readCommand();
+                ui.showLine();
+
+                // Check for bye command separately since it doesn't modify tasks
+                if (fullCommand.trim().equalsIgnoreCase("bye")) {
+                    ui.showGoodbye();
+                    ui.showLine();
+                    break;
+                }
+
+                // Parse and execute command
+                executeCommand(fullCommand);
+
+            } catch (ChipException e) {
+                ui.showError(e.getMessage());
+            } catch (IllegalArgumentException e) {
+                ui.showError("I'm sorry, there is no such action.");
+            } catch (Exception e) {
+                ui.showError("An unexpected error occurred. Please check your command.");
+            } finally {
+                ui.showLine();
+            }
+        }
+    }
+
+    private void executeCommand(String fullCommand) throws ChipException {
         String[] parts = fullCommand.split(" ", 2);
         Command action = Command.valueOf(parts[0].toUpperCase());
 
         switch (action) {
             case LIST:
-                showTaskList(tasks, ui);
+                showTaskList();
                 break;
             case MARK:
-                markTask(parts, tasks, ui, storage);
+                markTask(parts);
                 break;
             case UNMARK:
-                unmarkTask(parts, tasks, ui, storage);
+                unmarkTask(parts);
                 break;
             case DELETE:
-                deleteTask(parts, tasks, ui, storage);
+                deleteTask(parts);
                 break;
             case TODO:
-                addTodo(parts, tasks, ui, storage);
+                addTodo(parts);
                 break;
             case DEADLINE:
-                addDeadline(parts, tasks, ui, storage);
+                addDeadline(parts);
                 break;
             case EVENT:
-                addEvent(parts, tasks, ui, storage);
+                addEvent(parts);
                 break;
         }
     }
 
-    private static void showTaskList(TaskList tasks, Ui ui) {
+    private void showTaskList() {
         ui.showMessage("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
             ui.showMessage(" " + (i + 1) + "." + tasks.getTask(i));
         }
     }
 
-    private static void markTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+    private void markTask(String[] parts) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to mark.");
         }
@@ -45,10 +99,10 @@ public class Parser {
         task.markAsDone();
         ui.showMessage("Nice! I've marked this task as done:");
         ui.showMessage("   " + task);
-        storage.save(tasks.getTasks());
+        saveTasksToFile();
     }
 
-    private static void unmarkTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+    private void unmarkTask(String[] parts) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to unmark.");
         }
@@ -57,10 +111,10 @@ public class Parser {
         task.markAsNotDone();
         ui.showMessage("OK, I've marked this task as not done yet:");
         ui.showMessage("   " + task);
-        storage.save(tasks.getTasks());
+        saveTasksToFile();
     }
 
-    private static void deleteTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+    private void deleteTask(String[] parts) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to delete.");
         }
@@ -69,10 +123,10 @@ public class Parser {
         ui.showMessage("Noted. I've removed this task:");
         ui.showMessage("   " + removedTask);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
-        storage.save(tasks.getTasks());
+        saveTasksToFile();
     }
 
-    private static void addTodo(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+    private void addTodo(String[] parts) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("The description of a todo cannot be empty.");
         }
@@ -81,10 +135,10 @@ public class Parser {
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("   " + newTodo);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
-        storage.save(tasks.getTasks());
+        saveTasksToFile();
     }
 
-    private static void addDeadline(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+    private void addDeadline(String[] parts) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("The description of a deadline cannot be empty.");
         }
@@ -97,10 +151,10 @@ public class Parser {
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("   " + newDeadline);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
-        storage.save(tasks.getTasks());
+        saveTasksToFile();
     }
 
-    private static void addEvent(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+    private void addEvent(String[] parts) throws ChipException {
         if (parts.length < 2) {
             throw new ChipException("The description of an event cannot be empty.");
         }
@@ -117,7 +171,15 @@ public class Parser {
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("   " + newEvent);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
-        storage.save(tasks.getTasks());
+        saveTasksToFile();
+    }
+
+    private void saveTasksToFile() {
+        try {
+            storage.save(tasks.getTasks());
+        } catch (ChipException e) {
+            ui.showError("Error saving tasks: " + e.getMessage());
+        }
     }
 
     public static void main(String[] args) {
