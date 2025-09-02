@@ -1,10 +1,13 @@
 package chip.command;
 
-import chip.Chip;
-import chip.task.*;
-import chip.ui.*;
-import chip.storage.*;
 import chip.ChipException;
+import chip.storage.Storage;
+import chip.task.Deadline;
+import chip.task.Event;
+import chip.task.Task;
+import chip.task.TaskList;
+import chip.task.Todo;
+import chip.ui.Ui;
 
 /**
  * Handles parsing and execution of user commands.
@@ -26,27 +29,27 @@ public class Parser {
         Command action = Command.valueOf(parts[0].toUpperCase());
 
         switch (action) {
-            case LIST:
-                showTaskList(tasks, ui);
-                break;
-            case MARK:
-                markTask(parts, tasks, ui, storage);
-                break;
-            case UNMARK:
-                unmarkTask(parts, tasks, ui, storage);
-                break;
-            case DELETE:
-                deleteTask(parts, tasks, ui, storage);
-                break;
-            case TODO:
-                addTodo(parts, tasks, ui, storage);
-                break;
-            case DEADLINE:
-                addDeadline(parts, tasks, ui, storage);
-                break;
-            case EVENT:
-                addEvent(parts, tasks, ui, storage);
-                break;
+        case LIST:
+            showTaskList(tasks, ui);
+            break;
+        case MARK:
+            markTask(parts, tasks, ui, storage);
+            break;
+        case UNMARK:
+            unmarkTask(parts, tasks, ui, storage);
+            break;
+        case DELETE:
+            deleteTask(parts, tasks, ui, storage);
+            break;
+        case TODO:
+            addTodo(parts, tasks, ui, storage);
+            break;
+        case DEADLINE:
+            addDeadline(parts, tasks, ui, storage);
+            break;
+        case EVENT:
+            addEvent(parts, tasks, ui, storage);
+            break;
         }
     }
 
@@ -199,15 +202,5 @@ public class Parser {
         ui.showMessage("   " + newEvent);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
         storage.save(tasks.getTasks());
-    }
-
-    /**
-     * Entry point for the Chip application.
-     * Creates a new Chip instance and starts the application.
-     *
-     * @param args command line arguments (not used)
-     */
-    public static void main(String[] args) {
-        new Chip("./data/chip.txt").run();
     }
 }

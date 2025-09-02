@@ -1,13 +1,17 @@
 package chip.storage;
 
-import chip.task.*;
-import chip.ChipException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import chip.ChipException;
+import chip.task.Deadline;
+import chip.task.Event;
+import chip.task.Task;
+import chip.task.Todo;
 
 /**
  * Handles loading and saving of tasks to and from a file.
@@ -46,15 +50,15 @@ public class Storage {
                 Task task = null;
 
                 switch (parts[0]) {
-                    case "T":
-                        task = new Todo(parts[2]);
-                        break;
-                    case "D":
-                        task = new Deadline(parts[2], parts[3]);
-                        break;
-                    case "E":
-                        task = new Event(parts[2], parts[3], parts[4]);
-                        break;
+                case "T":
+                    task = new Todo(parts[2]);
+                    break;
+                case "D":
+                    task = new Deadline(parts[2], parts[3]);
+                    break;
+                case "E":
+                    task = new Event(parts[2], parts[3], parts[4]);
+                    break;
                 }
 
                 if (task != null) {
