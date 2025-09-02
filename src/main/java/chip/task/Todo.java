@@ -1,67 +1,39 @@
 package chip.task;
 
-import chip.ChipException;
-
 /**
- * Represents a generic task with a description and completion status.
- * This is the base class for all specific task types (Todo, Deadline, Event).
+ * Represents a simple todo task without any time constraints.
+ * Extends the base Task class to provide todo-specific formatting.
  */
-public class Task {
-    private String description;
-    private boolean isDone;
+public class Todo extends Task {
 
     /**
-     * Constructs a new Task with the given description.
-     * The task is initially marked as not done.
+     * Constructs a new Todo task with the given description.
      *
-     * @param description the description of the task
+     * @param description the description of the todo task
      */
-    public Task(String description) {
-        this.description = description;
-        this.isDone = false;
+    public Todo(String description) {
+        super(description);
     }
 
     /**
-     * Marks this task as completed.
-     */
-    public void markAsDone() {
-        this.isDone = true;
-    }
-
-    /**
-     * Marks this task as not completed.
-     */
-    public void markAsNotDone() {
-        this.isDone = false;
-    }
-
-    /**
-     * Returns the status icon for this task.
+     * Returns the file format string for this todo task.
+     * Format: "T | status | description"
      *
-     * @return "X" if task is done, " " (space) if not done
+     * @return the file format string representation
      */
-    public String getStatusIcon() {
-        return (isDone ? "X" : " ");
-    }
-
-    /**
-     * Returns the string representation for saving to file.
-     * Format: "status | description" where status is "1" for done, "0" for not done.
-     *
-     * @return the file format string representation of this task
-     */
+    @Override
     public String toFileString() {
-        return (isDone ? "1" : "0") + " | " + this.description;
+        return "T | " + super.toFileString();
     }
 
     /**
-     * Returns the string representation for display to user.
-     * Format: "[status] description" where status is "X" for done, " " for not done.
+     * Returns the display format string for this todo task.
+     * Format: "[T][status] description"
      *
-     * @return the display format string representation of this task
+     * @return the display format string representation
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + this.description;
+        return "[T]" + super.toString();
     }
 }
