@@ -9,7 +9,7 @@ import chip.ui.Ui;
  * Main class for the Chip task management application.
  * Handles initialization and coordination between UI, storage, and task management components.
  */
-public class Chip {
+public class Chip { 
 
     private Storage storage;
     private TaskList tasks;
