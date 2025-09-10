@@ -9,7 +9,7 @@ import chip.ui.Ui;
  * Main class for the Chip task management application.
  * Handles initialization and coordination between UI, storage, and task management components.
  */
-public class Chip { 
+public class Chip {
 
     private Storage storage;
     private TaskList tasks;
@@ -29,6 +29,45 @@ public class Chip {
         } catch (ChipException e) {
             ui.showError("Data file not found. Starting with an empty task list.");
             tasks = new TaskList();
+        }
+    }
+
+    /**
+     * Generates a response for the user's chat message for GUI usage.
+     *
+     * @param input the user's input command
+     * @return the response string to display in GUI
+     */
+    public String getResponse(String input) {
+        try {
+            if (input.trim().equalsIgnoreCase("bye")) {
+                return "Bye. Hope to see you again soon!";
+            }
+
+            StringBuilder response = new StringBuilder();
+
+            Ui mockUi = new Ui() {
+                @Override
+                public void showMessage(String message) {
+                    response.append(message).append("\n");
+                }
+
+                @Override
+                public void showError(String message) {
+                    response.append("OOPS!!! ").append(message).append("\n");
+                }
+            };
+
+            Parser.parse(input, tasks, mockUi, storage);
+
+            return response.toString().trim();
+
+        } catch (ChipException e) {
+            return "OOPS!!! " + e.getMessage();
+        } catch (IllegalArgumentException e) {
+            return "OOPS!!! I'm sorry, there is no such action.";
+        } catch (Exception e) {
+            return "OOPS!!! An unexpected error occurred. Please check your command.";
         }
     }
 
