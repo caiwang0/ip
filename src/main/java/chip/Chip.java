@@ -22,6 +22,7 @@ public class Chip {
      * @param filePath the path to the file where tasks are stored
      */
     public Chip(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty() : "File path should not be null or empty";
         ui = new Ui();
         storage = new Storage(filePath);
         try {
@@ -30,6 +31,9 @@ public class Chip {
             ui.showError("Data file not found. Starting with an empty task list.");
             tasks = new TaskList();
         }
+        assert ui != null : "UI should be initialized";
+        assert storage != null : "Storage should be initialized";
+        assert tasks != null : "TaskList should be initialized";
     }
 
     /**
@@ -39,6 +43,7 @@ public class Chip {
      * @return the response string to display in GUI
      */
     public String getResponse(String input) {
+        assert input != null : "Input should not be null";
         try {
             if (input.trim().equalsIgnoreCase("bye")) {
                 return "Bye. Hope to see you again soon!";
@@ -59,8 +64,9 @@ public class Chip {
             };
 
             Parser.parse(input, tasks, mockUi, storage);
-
-            return response.toString().trim();
+            String result = response.toString().trim();
+            assert result != null : "Response should not be null";
+            return result;
 
         } catch (ChipException e) {
             return "OOPS!!! " + e.getMessage();
