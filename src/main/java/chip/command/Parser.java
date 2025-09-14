@@ -23,7 +23,6 @@ public class Parser {
     private static final String DEADLINE_SEPARATOR = " /by ";
     private static final String EVENT_FROM_SEPARATOR = " /from ";
     private static final String EVENT_TO_SEPARATOR = " /to ";
-    private static final String FILE_SEPARATOR = " \\| ";
     
     // Error messages
     private static final String ERROR_MARK_TASK = "Please specify which task to mark.";
@@ -36,6 +35,8 @@ public class Parser {
     private static final String ERROR_EVENT_FROM_FORMAT = "Please specify the event start time using /from.";
     private static final String ERROR_EVENT_TO_FORMAT = "Please specify the event end time using /to.";
     private static final String ERROR_FIND_KEYWORD = "Please specify a keyword to search for.";
+    private static final String ERROR_INVALID_TASK_NUMBER = "Please provide a valid task number.";
+    private static final String ERROR_NEGATIVE_TASK_NUMBER = "Task number must be positive.";
     
     // Success messages
     private static final String MESSAGE_TASK_MARKED = "Nice! I've marked this task as done:";
@@ -97,7 +98,7 @@ public class Parser {
     private static void showTaskList(TaskList tasks, Ui ui) {
         ui.showMessage(MESSAGE_LIST_HEADER);
         for (int i = 0; i < tasks.size(); i++) {
-            ui.showMessage(" " + (i + 1) + "." + tasks.getTask(i));
+            ui.showMessage(tasks.formatTaskForDisplay(i, tasks.getTask(i)));
         }
     }
 
@@ -182,18 +183,14 @@ public class Parser {
      * @throws ChipException if description is empty or deadline format is invalid
      */
     private static void addDeadline(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
-        if (parts.length < 2) {
-            throw new ChipException("The description of a deadline cannot be empty.");
-        }
-        String[] deadlineParts = parts[1].split(" /by ");
-        if (deadlineParts.length < 2) {
-            throw new ChipException("Please specify the deadline time using /by.");
+        validateCommandParts(parts, ERROR_DEADLINE_EMPTY);
+        String[] deadlineParts = parts[1].split(DEADLINE_SEPARATOR);
+        if (deadlineParts.length < COMMAND_PART_LIMIT) {
+            throw new ChipException(ERROR_DEADLINE_FORMAT);
         }
         Task newDeadline = new Deadline(deadlineParts[0], deadlineParts[1]);
         tasks.addTask(newDeadline);
-        ui.showMessage("Got it. I've added this task:");
-        ui.showMessage("   " + newDeadline);
-        ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
+        showTaskAddedResult(ui, newDeadline, tasks.size());
         storage.save(tasks.getTasks());
     }
 
@@ -239,7 +236,7 @@ public class Parser {
         } else {
             ui.showMessage(MESSAGE_FIND_HEADER);
             for (int i = 0; i < matchingTasks.size(); i++) {
-                ui.showMessage(" " + (i + 1) + "." + matchingTasks.get(i));
+                ui.showMessage(tasks.formatTaskForDisplay(i, matchingTasks.get(i)));
             }
         }
     }
@@ -268,11 +265,11 @@ public class Parser {
         try {
             int taskNumber = Integer.parseInt(taskNumberStr) - 1;
             if (taskNumber < 0) {
-                throw new ChipException("Task number must be positive.");
+                throw new ChipException(ERROR_NEGATIVE_TASK_NUMBER);
             }
             return taskNumber;
         } catch (NumberFormatException e) {
-            throw new ChipException("Please provide a valid task number.");
+            throw new ChipException(ERROR_INVALID_TASK_NUMBER);
         }
     }
     

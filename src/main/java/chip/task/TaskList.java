@@ -7,6 +7,11 @@ import java.util.ArrayList;
  * Provides an abstraction over the underlying ArrayList for task management.
  */
 public class TaskList {
+    
+    // Constants
+    private static final String TASK_INDENT = " ";
+    private static final String TASK_SEPARATOR = ".";
+    
     private ArrayList<Task> tasks;
 
     /**
@@ -31,10 +36,7 @@ public class TaskList {
      * @param task the task to add
      */
     public void addTask(Task task) {
-        assert task != null : "Task to add should not be null";
-        int originalSize = tasks.size();
         tasks.add(task);
-        assert tasks.size() == originalSize + 1 : "Task list size should increase by 1";
     }
 
     /**
@@ -45,11 +47,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is out of range
      */
     public Task deleteTask(int index) {
-        assert index >= 0 : "Index should be non-negative";
-        assert index < tasks.size() : "Index should be within bounds";
-        Task deletedTask = tasks.remove(index);
-        assert deletedTask != null : "Deleted task should not be null";
-        return deletedTask;
+        return tasks.remove(index);
     }
 
     /**
@@ -60,11 +58,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is out of range
      */
     public Task getTask(int index) {
-        assert index >= 0 : "Index should be non-negative";
-        assert index < tasks.size() : "Index should be within bounds";
-        Task task = tasks.get(index);
-        assert task != null : "Retrieved task should not be null";
-        return task;
+        return tasks.get(index);
     }
 
     /**
@@ -93,11 +87,24 @@ public class TaskList {
      */
     public ArrayList<Task> findTasks(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
+        String lowerKeyword = keyword.toLowerCase();
+        
         for (Task task : tasks) {
-            if (task.toString().toLowerCase().contains(keyword.toLowerCase())) {
+            if (task.toString().toLowerCase().contains(lowerKeyword)) {
                 matchingTasks.add(task);
             }
         }
         return matchingTasks;
+    }
+    
+    /**
+     * Formats a task for display with its index number.
+     *
+     * @param index the 0-based index of the task
+     * @param task the task to format
+     * @return formatted string representation of the task
+     */
+    public String formatTaskForDisplay(int index, Task task) {
+        return TASK_INDENT + (index + 1) + TASK_SEPARATOR + task;
     }
 }

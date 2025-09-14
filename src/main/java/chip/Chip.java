@@ -10,6 +10,16 @@ import chip.ui.Ui;
  * Handles initialization and coordination between UI, storage, and task management components.
  */
 public class Chip {
+    
+    // Constants
+    private static final String DEFAULT_FILE_PATH = "./data/chip.txt";
+    private static final String BYE_COMMAND = "bye";
+    private static final String GOODBYE_MESSAGE = "Bye. Hope to see you again soon!";
+    private static final String ERROR_PREFIX = "OOPS!!! ";
+    private static final String ERROR_NO_ACTION = "I'm sorry, there is no such action.";
+    private static final String ERROR_UNEXPECTED = "An unexpected error occurred. Please check your command.";
+    private static final String ERROR_FILE_NOT_FOUND = "Data file not found. Starting with an empty task list.";
+    private static final String NEWLINE = "\n";
 
     private Storage storage;
     private TaskList tasks;
@@ -22,18 +32,14 @@ public class Chip {
      * @param filePath the path to the file where tasks are stored
      */
     public Chip(String filePath) {
-        assert filePath != null && !filePath.trim().isEmpty() : "File path should not be null or empty";
         ui = new Ui();
         storage = new Storage(filePath);
         try {
             tasks = new TaskList(storage.load());
         } catch (ChipException e) {
-            ui.showError("Data file not found. Starting with an empty task list.");
+            ui.showError(ERROR_FILE_NOT_FOUND);
             tasks = new TaskList();
         }
-        assert ui != null : "UI should be initialized";
-        assert storage != null : "Storage should be initialized";
-        assert tasks != null : "TaskList should be initialized";
     }
 
     /**
@@ -43,10 +49,9 @@ public class Chip {
      * @return the response string to display in GUI
      */
     public String getResponse(String input) {
-        assert input != null : "Input should not be null";
         try {
-            if (input.trim().equalsIgnoreCase("bye")) {
-                return "Bye. Hope to see you again soon!";
+            if (input.trim().equalsIgnoreCase(BYE_COMMAND)) {
+                return GOODBYE_MESSAGE;
             }
 
             StringBuilder response = new StringBuilder();
@@ -54,26 +59,25 @@ public class Chip {
             Ui mockUi = new Ui() {
                 @Override
                 public void showMessage(String message) {
-                    response.append(message).append("\n");
+                    response.append(message).append(NEWLINE);
                 }
 
                 @Override
                 public void showError(String message) {
-                    response.append("OOPS!!! ").append(message).append("\n");
+                    response.append(ERROR_PREFIX).append(message).append(NEWLINE);
                 }
             };
 
             Parser.parse(input, tasks, mockUi, storage);
-            String result = response.toString().trim();
-            assert result != null : "Response should not be null";
-            return result;
+
+            return response.toString().trim();
 
         } catch (ChipException e) {
-            return "OOPS!!! " + e.getMessage();
+            return ERROR_PREFIX + e.getMessage();
         } catch (IllegalArgumentException e) {
-            return "OOPS!!! I'm sorry, there is no such action.";
+            return ERROR_PREFIX + ERROR_NO_ACTION;
         } catch (Exception e) {
-            return "OOPS!!! An unexpected error occurred. Please check your command.";
+            return ERROR_PREFIX + ERROR_UNEXPECTED;
         }
     }
 
@@ -89,7 +93,7 @@ public class Chip {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
 
-                if (fullCommand.trim().equalsIgnoreCase("bye")) {
+                if (fullCommand.trim().equalsIgnoreCase(BYE_COMMAND)) {
                     ui.showGoodbye();
                     ui.showLine();
                     break;
@@ -100,9 +104,9 @@ public class Chip {
             } catch (ChipException e) {
                 ui.showError(e.getMessage());
             } catch (IllegalArgumentException e) {
-                ui.showError("I'm sorry, there is no such action.");
+                ui.showError(ERROR_NO_ACTION);
             } catch (Exception e) {
-                ui.showError("An unexpected error occurred. Please check your command.");
+                ui.showError(ERROR_UNEXPECTED);
             } finally {
                 ui.showLine();
             }
@@ -116,6 +120,6 @@ public class Chip {
      * @param args command line arguments (not used)
      */
     public static void main(String[] args) {
-        new Chip("./data/chip.txt").run();
+        new Chip(DEFAULT_FILE_PATH).run();
     }
 }
