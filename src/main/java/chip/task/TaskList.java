@@ -1,6 +1,8 @@
 package chip.task;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Manages a list of tasks with operations to add, delete, and retrieve tasks.
@@ -140,5 +142,29 @@ public class TaskList {
      */
     public String formatTaskForDisplay(int index, Task task) {
         return TASK_INDENT + (index + 1) + TASK_SEPARATOR + task;
+    }
+    
+    /**
+     * Sorts tasks by description in alphabetical order (A-Z).
+     * Uses case-insensitive comparison for better user experience.
+     */
+    public void sortByDescription() {
+        assert this.tasks != null : "Tasks list should not be null before sorting";
+        
+        Collections.sort(this.tasks, new Comparator<Task>() {
+            @Override
+            public int compare(Task task1, Task task2) {
+                assert task1 != null : "Task1 should not be null during comparison";
+                assert task2 != null : "Task2 should not be null during comparison";
+                
+                // Extract description from task toString() method
+                String desc1 = task1.toString().toLowerCase();
+                String desc2 = task2.toString().toLowerCase();
+                
+                return desc1.compareTo(desc2);
+            }
+        });
+        
+        assert this.tasks != null : "Tasks list should not be null after sorting";
     }
 }

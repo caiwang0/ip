@@ -21,6 +21,8 @@ public enum Command {
     DELETE,
     /** Find tasks containing a keyword */
     FIND,
+    /** Sort tasks by description alphabetically */
+    SORT,
     /** Exit the application */
     BYE
 }

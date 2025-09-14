@@ -47,6 +47,7 @@ public class Parser {
     private static final String MESSAGE_LIST_HEADER = "Here are the tasks in your list:";
     private static final String MESSAGE_FIND_HEADER = "Here are the matching tasks in your list:";
     private static final String MESSAGE_NO_MATCHES = "No matching tasks found.";
+    private static final String MESSAGE_TASKS_SORTED = "Tasks have been sorted alphabetically by description.";
 
     /**
      * Parses a user command and executes the corresponding action.
@@ -92,6 +93,9 @@ public class Parser {
             break;
         case FIND:
             findTasks(parts, tasks, ui);
+            break;
+        case SORT:
+            sortTasks(tasks, ui, storage);
             break;
         }
     }
@@ -350,5 +354,23 @@ public class Parser {
         ui.showMessage(MESSAGE_TASK_ADDED);
         ui.showMessage("   " + task);
         ui.showMessage(String.format(MESSAGE_TASK_COUNT, taskCount));
+    }
+    
+    /**
+     * Sorts tasks by description alphabetically and saves the changes.
+     *
+     * @param tasks the task list to sort
+     * @param ui the user interface for showing messages
+     * @param storage the storage component for saving tasks
+     * @throws ChipException if saving fails
+     */
+    private static void sortTasks(TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
+        tasks.sortByDescription();
+        ui.showMessage(MESSAGE_TASKS_SORTED);
+        storage.save(tasks.getTasks());
     }
 }
