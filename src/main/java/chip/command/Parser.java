@@ -27,8 +27,16 @@ public class Parser {
      * @throws ChipException if the command is invalid or cannot be executed
      */
     public static void parse(String fullCommand, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert fullCommand != null : "Command cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         String[] parts = fullCommand.split(" ", 2);
+        assert parts.length > 0 : "Command parts should have at least one element";
+        
         Command action = Command.valueOf(parts[0].toUpperCase());
+        assert action != null : "Command should be valid after parsing";
 
         switch (action) {
         case LIST:
@@ -65,28 +73,39 @@ public class Parser {
      * @param ui the user interface for showing messages
      */
     private static void showTaskList(TaskList tasks, Ui ui) {
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        
         ui.showMessage("Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            ui.showMessage(" " + (i + 1) + "." + tasks.getTask(i));
+            Task task = tasks.getTask(i);
+            assert task != null : "Task at index " + i + " should not be null";
+            ui.showMessage(" " + (i + 1) + "." + task);
         }
     }
 
     /**
      * Marks a specified task as completed.
-     *
-     * @param parts command parts where parts[1] should contain the task number
-     * @param tasks the task list containing the task to mark
-     * @param ui the user interface for showing messages
-     * @param storage the storage component for saving changes
-     * @throws ChipException if task number is not specified or invalid
      */
     private static void markTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to mark.");
         }
+        
         int taskNumber = Integer.parseInt(parts[1]) - 1;
+        assert taskNumber >= 0 : "Task number should be non-negative after conversion";
+        
         Task task = tasks.getTask(taskNumber);
+        assert task != null : "Retrieved task should not be null";
+        
         task.markAsDone();
+        assert task.getStatusIcon().equals("X") : "Task should show as done after marking";
+        
         ui.showMessage("Nice! I've marked this task as done:");
         ui.showMessage("   " + task);
         storage.save(tasks.getTasks());
@@ -94,20 +113,26 @@ public class Parser {
 
     /**
      * Marks a specified task as not completed.
-     *
-     * @param parts command parts where parts[1] should contain the task number
-     * @param tasks the task list containing the task to unmark
-     * @param ui the user interface for showing messages
-     * @param storage the storage component for saving changes
-     * @throws ChipException if task number is not specified or invalid
      */
     private static void unmarkTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to unmark.");
         }
+        
         int taskNumber = Integer.parseInt(parts[1]) - 1;
+        assert taskNumber >= 0 : "Task number should be non-negative after conversion";
+        
         Task task = tasks.getTask(taskNumber);
+        assert task != null : "Retrieved task should not be null";
+        
         task.markAsNotDone();
+        assert task.getStatusIcon().equals(" ") : "Task should show as not done after unmarking";
+        
         ui.showMessage("OK, I've marked this task as not done yet:");
         ui.showMessage("   " + task);
         storage.save(tasks.getTasks());
@@ -115,19 +140,26 @@ public class Parser {
 
     /**
      * Deletes a specified task from the task list.
-     *
-     * @param parts command parts where parts[1] should contain the task number
-     * @param tasks the task list to delete from
-     * @param ui the user interface for showing messages
-     * @param storage the storage component for saving changes
-     * @throws ChipException if task number is not specified or invalid
      */
     private static void deleteTask(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("Please specify which task to delete.");
         }
+        
+        int initialSize = tasks.size();
         int taskNumber = Integer.parseInt(parts[1]) - 1;
+        assert taskNumber >= 0 : "Task number should be non-negative after conversion";
+        assert taskNumber < initialSize : "Task number should be within valid range";
+        
         Task removedTask = tasks.deleteTask(taskNumber);
+        assert removedTask != null : "Removed task should not be null";
+        assert tasks.size() == initialSize - 1 : "Task list should be smaller after deletion";
+        
         ui.showMessage("Noted. I've removed this task:");
         ui.showMessage("   " + removedTask);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
@@ -136,19 +168,25 @@ public class Parser {
 
     /**
      * Adds a new todo task to the task list.
-     *
-     * @param parts command parts where parts[1] should contain the task description
-     * @param tasks the task list to add to
-     * @param ui the user interface for showing messages
-     * @param storage the storage component for saving changes
-     * @throws ChipException if task description is empty
      */
     private static void addTodo(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("The description of a todo cannot be empty.");
         }
+        
+        int initialSize = tasks.size();
         Task newTodo = new Todo(parts[1]);
+        assert newTodo != null : "Created todo should not be null";
+        assert newTodo.toString().startsWith("[T]") : "Todo should have correct type indicator";
+        
         tasks.addTask(newTodo);
+        assert tasks.size() == initialSize + 1 : "Task list should be larger after adding";
+        
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("   " + newTodo);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
@@ -157,23 +195,32 @@ public class Parser {
 
     /**
      * Adds a new deadline task to the task list.
-     *
-     * @param parts command parts containing description and deadline in format "description /by deadline"
-     * @param tasks the task list to add to
-     * @param ui the user interface for showing messages
-     * @param storage the storage component for saving changes
-     * @throws ChipException if description is empty or deadline format is invalid
      */
     private static void addDeadline(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("The description of a deadline cannot be empty.");
         }
+        
         String[] deadlineParts = parts[1].split(" /by ");
+        assert deadlineParts != null : "Deadline parts should not be null after split";
+        
         if (deadlineParts.length < 2) {
             throw new ChipException("Please specify the deadline time using /by.");
         }
+        
+        int initialSize = tasks.size();
         Task newDeadline = new Deadline(deadlineParts[0], deadlineParts[1]);
+        assert newDeadline != null : "Created deadline should not be null";
+        assert newDeadline.toString().startsWith("[D]") : "Deadline should have correct type indicator";
+        
         tasks.addTask(newDeadline);
+        assert tasks.size() == initialSize + 1 : "Task list should be larger after adding";
+        
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("   " + newDeadline);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
@@ -182,27 +229,39 @@ public class Parser {
 
     /**
      * Adds a new event task to the task list.
-     *
-     * @param parts command parts containing description and times in format "description /from start /to end"
-     * @param tasks the task list to add to
-     * @param ui the user interface for showing messages
-     * @param storage the storage component for saving changes
-     * @throws ChipException if description is empty or time format is invalid
      */
     private static void addEvent(String[] parts, TaskList tasks, Ui ui, Storage storage) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("The description of an event cannot be empty.");
         }
+        
         String[] eventParts = parts[1].split(" /from ");
+        assert eventParts != null : "Event parts should not be null after split";
+        
         if (eventParts.length < 2) {
             throw new ChipException("Please specify the event start time using /from.");
         }
+        
         String[] timeParts = eventParts[1].split(" /to ");
+        assert timeParts != null : "Time parts should not be null after split";
+        
         if (timeParts.length < 2) {
             throw new ChipException("Please specify the event end time using /to.");
         }
+        
+        int initialSize = tasks.size();
         Task newEvent = new Event(eventParts[0], timeParts[0], timeParts[1]);
+        assert newEvent != null : "Created event should not be null";
+        assert newEvent.toString().startsWith("[E]") : "Event should have correct type indicator";
+        
         tasks.addTask(newEvent);
+        assert tasks.size() == initialSize + 1 : "Task list should be larger after adding";
+        
         ui.showMessage("Got it. I've added this task:");
         ui.showMessage("   " + newEvent);
         ui.showMessage("Now you have " + tasks.size() + " tasks in the list.");
@@ -211,26 +270,31 @@ public class Parser {
 
     /**
      * Finds and displays tasks that contain the specified keyword.
-     *
-     * @param parts command parts where parts[1] should contain the search keyword
-     * @param tasks the task list to search in
-     * @param ui the user interface for showing messages
-     * @throws ChipException if no keyword is provided
      */
     private static void findTasks(String[] parts, TaskList tasks, Ui ui) throws ChipException {
+        assert parts != null : "Command parts cannot be null";
+        assert tasks != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        
         if (parts.length < 2) {
             throw new ChipException("Please specify a keyword to search for.");
         }
 
         String keyword = parts[1];
+        assert keyword != null : "Keyword should not be null";
+        
         ArrayList<Task> matchingTasks = tasks.findTasks(keyword);
+        assert matchingTasks != null : "Matching tasks should not be null";
+        assert matchingTasks.size() <= tasks.size() : "Matching tasks cannot exceed total tasks";
 
         if (matchingTasks.isEmpty()) {
             ui.showMessage("No matching tasks found.");
         } else {
             ui.showMessage("Here are the matching tasks in your list:");
             for (int i = 0; i < matchingTasks.size(); i++) {
-                ui.showMessage(" " + (i + 1) + "." + matchingTasks.get(i));
+                Task task = matchingTasks.get(i);
+                assert task != null : "Matching task should not be null";
+                ui.showMessage(" " + (i + 1) + "." + task);
             }
         }
     }
