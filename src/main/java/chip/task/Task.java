@@ -17,6 +17,9 @@ public class Task {
      * @param description the description of the task
      */
     public Task(String description) {
+        assert description != null : "Task description cannot be null";
+        assert !description.trim().isEmpty() : "Task description cannot be empty";
+        
         this.description = description;
         this.isDone = false;
     }
@@ -26,6 +29,7 @@ public class Task {
      */
     public void markAsDone() {
         this.isDone = true;
+        assert this.isDone : "Task should be marked as done after calling markAsDone()";
     }
 
     /**
@@ -33,6 +37,7 @@ public class Task {
      */
     public void markAsNotDone() {
         this.isDone = false;
+        assert !this.isDone : "Task should be marked as not done after calling markAsNotDone()";
     }
 
     /**
@@ -41,7 +46,9 @@ public class Task {
      * @return "X" if task is done, " " (space) if not done
      */
     public String getStatusIcon() {
-        return (isDone ? "X" : " ");
+        String icon = (isDone ? "X" : " ");
+        assert icon.equals("X") || icon.equals(" ") : "Status icon should be either 'X' or ' '";
+        return icon;
     }
 
     /**
@@ -51,7 +58,10 @@ public class Task {
      * @return the file format string representation of this task
      */
     public String toFileString() {
-        return (isDone ? "1" : "0") + " | " + this.description;
+        String result = (isDone ? "1" : "0") + " | " + this.description;
+        assert result.contains(" | ") : "File string should contain separator ' | '";
+        assert result.startsWith("0 | ") || result.startsWith("1 | ") : "File string should start with status";
+        return result;
     }
 
     /**
@@ -62,6 +72,8 @@ public class Task {
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + this.description;
+        String result = "[" + getStatusIcon() + "] " + this.description;
+        assert result.startsWith("[") && result.contains("]") : "Display string should have status in brackets";
+        return result;
     }
 }
