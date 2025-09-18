@@ -12,7 +12,7 @@ import chip.task.Todo;
 import chip.ui.Ui;
 
 /**
- * Handles parsing and execution of user command.
+ * Handles parsing and execution of user commands.
  * Converts user input strings into appropriate actions on tasks, UI, and storage.
  */
 public class Parser {
