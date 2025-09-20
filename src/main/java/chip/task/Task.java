@@ -5,9 +5,20 @@ import chip.ChipException;
 /**
  * Represents a generic task with a description and completion status.
  * This is the base class for all specific task types (Todo, Deadline, Event).
+ * 
+ * <p>Each task has:
+ * <ul>
+ * <li>A description that describes what needs to be done</li>
+ * <li>A completion status (done or not done)</li>
+ * </ul>
+ * 
+ * <p>The task can be marked as completed or not completed, and provides
+ * string representations for both file storage and user display.
  */
 public class Task {
+    /** The description of the task */
     private String description;
+    /** Whether the task has been completed */
     private boolean isDone;
 
     /**

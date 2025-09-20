@@ -16,8 +16,8 @@ public class Todo extends Task {
     }
 
     /**
-     * Returns the file format string for this todo task.
-     * Format: "T | status | description"
+     * AI-Enhanced: Returns the file format string for this todo task.
+     * Format: "T | status | priority | description"
      *
      * @return the file format string representation
      */
@@ -27,8 +27,8 @@ public class Todo extends Task {
     }
 
     /**
-     * Returns the display format string for this todo task.
-     * Format: "[T][status] description"
+     * AI-Enhanced: Returns the display format string for this todo task.
+     * Format: "[T][status] [priority] description"
      *
      * @return the display format string representation
      */

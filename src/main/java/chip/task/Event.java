@@ -33,8 +33,8 @@ public class Event extends Task {
     }
 
     /**
-     * Returns the file format string for this event task.
-     * Format: "E | status | description | start_time | end_time"
+     * AI-Enhanced: Returns the file format string for this event task.
+     * Format: "E | status | priority | description | start_time | end_time"
      *
      * @return the file format string representation
      */
@@ -47,8 +47,8 @@ public class Event extends Task {
     }
 
     /**
-     * Returns the display format string for this event task.
-     * Format: "[E][status] description (from: formatted_start_date to: formatted_end_time)"
+     * AI-Enhanced: Returns the display format string for this event task.
+     * Format: "[E][status] [priority] description (from: formatted_start_date to: formatted_end_time)"
      *
      * @return the display format string representation
      */

@@ -30,8 +30,8 @@ public class Deadline extends Task {
     }
 
     /**
-     * Returns the file format string for this deadline task.
-     * Format: "D | status | description | deadline"
+     * AI-Enhanced: Returns the file format string for this deadline task.
+     * Format: "D | status | priority | description | deadline"
      *
      * @return the file format string representation
      */
@@ -42,8 +42,8 @@ public class Deadline extends Task {
     }
 
     /**
-     * Returns the display format string for this deadline task.
-     * Format: "[D][status] description (by: formatted_date)"
+     * AI-Enhanced: Returns the display format string for this deadline task.
+     * Format: "[D][status] [priority] description (by: formatted_date)"
      *
      * @return the display format string representation
      */

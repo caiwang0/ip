@@ -23,6 +23,7 @@ public class Ui {
         System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Chip");
         System.out.println(" What can I do for you?");
+        System.out.println(" Type 'help' to see available commands.");
         System.out.println("____________________________________________________________");
     }
 
@@ -49,6 +50,7 @@ public class Ui {
      */
     public void showError(String message) {
         System.out.println("OOPS!!! " + message);
+        System.out.println(" Type 'help' to see available commands.");
     }
 
     /**

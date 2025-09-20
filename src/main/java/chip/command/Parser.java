@@ -48,6 +48,7 @@ public class Parser {
     private static final String MESSAGE_FIND_HEADER = "Here are the matching tasks in your list:";
     private static final String MESSAGE_NO_MATCHES = "No matching tasks found.";
     private static final String MESSAGE_TASKS_SORTED = "Tasks have been sorted alphabetically by description.";
+    private static final String MESSAGE_HELP_HEADER = "Here are the commands I understand:";
 
     /**
      * Parses a user command and executes the corresponding action.
@@ -66,10 +67,18 @@ public class Parser {
         
         String[] parts = fullCommand.split(COMMAND_SEPARATOR, COMMAND_PART_LIMIT);
         assert parts.length > 0 : "Command parts should have at least one element";
-        Command action = Command.valueOf(parts[0].toUpperCase());
-        assert action != null : "Command should be valid after parsing";
+        
+        // Handle help command
+        if (parts[0].toLowerCase().equals("help")) {
+            showHelp(ui);
+            return;
+        }
+        
+        try {
+            Command action = Command.valueOf(parts[0].toUpperCase());
+            assert action != null : "Command should be valid after parsing";
 
-        switch (action) {
+            switch (action) {
         case LIST:
             showTaskList(tasks, ui);
             break;
@@ -97,6 +106,9 @@ public class Parser {
         case SORT:
             sortTasks(tasks, ui, storage);
             break;
+        }
+        } catch (IllegalArgumentException e) {
+            throw new ChipException("I don't understand that command. Type 'help' to see available commands.");
         }
     }
 
@@ -372,5 +384,27 @@ public class Parser {
         tasks.sortByDescription();
         ui.showMessage(MESSAGE_TASKS_SORTED);
         storage.save(tasks.getTasks());
+    }
+    
+    /**
+     * Shows help information with all available commands.
+     *
+     * @param ui the user interface for showing messages
+     */
+    private static void showHelp(Ui ui) {
+        assert ui != null : "Ui cannot be null";
+        
+        ui.showMessage(MESSAGE_HELP_HEADER);
+        ui.showMessage(" todo <description> - Add a simple task");
+        ui.showMessage(" deadline <description> /by <date> - Add a task with deadline");
+        ui.showMessage(" event <description> /from <start> /to <end> - Add an event");
+        ui.showMessage(" list - Show all tasks");
+        ui.showMessage(" mark <number> - Mark task as done");
+        ui.showMessage(" unmark <number> - Mark task as not done");
+        ui.showMessage(" delete <number> - Remove a task");
+        ui.showMessage(" find <keyword> - Search for tasks");
+        ui.showMessage(" sort - Sort tasks alphabetically");
+        ui.showMessage(" help - Show this help message");
+        ui.showMessage(" bye - Exit the application");
     }
 }
