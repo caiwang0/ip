@@ -157,6 +157,13 @@ public class ParserTest {
     }
 
     @Test
+    public void testDeadlineWithEmptyDescription() {
+        assertThrows(ChipException.class, () -> {
+            Parser.parse("deadline /by 2024-01-01 0100", taskList, ui, storage);
+        });
+    }
+
+    @Test
     public void testEventWithoutFrom() {
         assertThrows(ChipException.class, () -> {
             Parser.parse("event Team meeting", taskList, ui, storage);
@@ -167,6 +174,13 @@ public class ParserTest {
     public void testEventWithoutTo() {
         assertThrows(ChipException.class, () -> {
             Parser.parse("event Team meeting /from 2024-12-25 1400", taskList, ui, storage);
+        });
+    }
+
+    @Test
+    public void testEventWithEmptyDescription() {
+        assertThrows(ChipException.class, () -> {
+            Parser.parse("event /from 2024-12-25 1400 /to 2024-12-25 1600", taskList, ui, storage);
         });
     }
 }

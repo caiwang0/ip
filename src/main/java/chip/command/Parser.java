@@ -237,6 +237,10 @@ public class Parser {
             throw new ChipException(ERROR_DEADLINE_FORMAT);
         }
         
+        if (deadlineParts[0].trim().isEmpty()) {
+            throw new ChipException(ERROR_DEADLINE_EMPTY);
+        }
+        
         int initialSize = tasks.size();
         Task newDeadline = new Deadline(deadlineParts[0], deadlineParts[1]);
         assert newDeadline != null : "Created deadline should not be null";
@@ -265,6 +269,11 @@ public class Parser {
         if (eventParts.length < COMMAND_PART_LIMIT) {
             throw new ChipException(ERROR_EVENT_FROM_FORMAT);
         }
+        
+        if (eventParts[0].trim().isEmpty()) {
+            throw new ChipException(ERROR_EVENT_EMPTY);
+        }
+        
         String[] timeParts = eventParts[1].split(EVENT_TO_SEPARATOR);
         assert timeParts != null : "Time parts should not be null after split";
         
