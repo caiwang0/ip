@@ -396,7 +396,7 @@ public class Parser {
     }
     
     /**
-     * Shows help information with all available commands.
+     * Shows help information with all available command.
      *
      * @param ui the user interface for showing messages
      */
