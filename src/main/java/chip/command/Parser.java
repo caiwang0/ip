@@ -282,7 +282,7 @@ public class Parser {
         }
         
         int initialSize = tasks.size();
-        Task newEvent = new Event(eventParts[0], timeParts[0], timeParts[1]);
+        Task newEvent = new Event(eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim());
         assert newEvent != null : "Created event should not be null";
         assert newEvent.toString().startsWith("[E]") : "Event should have correct type indicator";
         
