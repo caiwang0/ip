@@ -20,9 +20,9 @@ public class Parser {
     // Constants for command parsing
     private static final String COMMAND_SEPARATOR = " ";
     private static final int COMMAND_PART_LIMIT = 2;
-    private static final String DEADLINE_SEPARATOR = " /by ";
-    private static final String EVENT_FROM_SEPARATOR = " /from ";
-    private static final String EVENT_TO_SEPARATOR = " /to ";
+    private static final String DEADLINE_SEPARATOR = "/by ";
+    private static final String EVENT_FROM_SEPARATOR = "/from ";
+    private static final String EVENT_TO_SEPARATOR = "/to ";
     
     // Error messages
     private static final String ERROR_MARK_TASK = "Please specify which task to mark.";
